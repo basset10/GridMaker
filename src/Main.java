@@ -19,6 +19,7 @@ import com.osreboot.ridhvl2.template.HvlTemplateI;
 
 
 public class Main extends HvlTemplateI{
+	//Test Push
 	Camera cam;
 	public static int SCREEN_MAIN = 1;
 	public static int SCREEN_SETTINGS = 2;
