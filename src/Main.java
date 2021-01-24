@@ -5,6 +5,7 @@ import static com.osreboot.ridhvl2.HvlStatics.hvlLoad;
 import static com.osreboot.ridhvl2.HvlStatics.hvlScale;
 import static com.osreboot.ridhvl2.HvlStatics.hvlTranslate;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -42,6 +43,16 @@ public class Main extends HvlTemplateI{
 	public void initialize() {
 		cam = new Camera(1920/2, 1080/2);
 		program.initialize();
+		
+		try {
+			SaveLoad.createFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		/*
+
+		*/
+		
 	}
 
 	@Override

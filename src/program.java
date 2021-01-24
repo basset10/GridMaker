@@ -3,6 +3,7 @@ import static com.osreboot.ridhvl2.HvlStatics.hvlFont;
 import static com.osreboot.ridhvl2.HvlStatics.hvlLine;
 import static com.osreboot.ridhvl2.HvlStatics.hvlLoad;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
@@ -13,7 +14,7 @@ import org.newdawn.slick.Color;
 import com.osreboot.ridhvl2.HvlCoord;
 
 public class program {
-	
+
 	/*
 	 * TODO
 	 * 
@@ -36,6 +37,26 @@ public class program {
 	static float fontY = 0;
 	static float fontTimer = 0;
 	static boolean pauseStatus = false;
+	static String saveText = "";
+	static int counter = 0;
+
+	public static void squaresToText() {
+		for(Square s : squares) {
+
+			if(counter%96 == 0 && counter != 0) {
+				saveText = saveText + '\n';
+			}
+
+			if(s.isOpen()) {
+				saveText = saveText + "0";
+			}else {
+				saveText = saveText + "1";
+			}
+
+			counter++;
+
+		}
+	}
 
 
 	public static void initialize() {
@@ -43,9 +64,9 @@ public class program {
 
 		hvlLoad("INOF.hvlft");	        //0
 		hvlFont(0);	
+		for(int j = 0; j < 1080; j=j+Square.SIZE) {
+			for(int i = 0; i < 1920; i=i+Square.SIZE) {
 
-		for(int i = 0; i < 1920; i=i+Square.SIZE) {
-			for(int j = 0; j < 1080; j=j+Square.SIZE) {
 				if(i == 0 || j == 0 || i == 1920 - Square.SIZE || j == 1080 - Square.SIZE) {
 					squares.add(new Square(i+Square.SIZE/2, j+Square.SIZE/2, false));
 				}else {
@@ -58,7 +79,9 @@ public class program {
 	}
 
 	public static void update(){
-		
+
+		System.out.println(squares.size());
+
 		if(!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
 			pauseStatus = false;
 		}
@@ -66,6 +89,17 @@ public class program {
 		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !pauseStatus){
 			Main.screen = Main.SCREEN_SETTINGS;
 			pauseStatus = true;
+		}
+
+		if(Keyboard.isKeyDown(Keyboard.KEY_S)){
+			squaresToText();
+			try {
+				SaveLoad.writeToFile(saveText);
+				System.out.println("Saved!");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 		}
 
 
@@ -92,7 +126,6 @@ public class program {
 				if(squares.get(l).isOpen()) {
 					squares.get(l).setOpen(false);
 					if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-						squares.get(l).setSpecial(true);
 					}
 				}	
 			}
@@ -100,7 +133,6 @@ public class program {
 			if(Mouse.isButtonDown(1) && (Mouse.getX()*10/9) >= squares.get(l).getxPos() - Square.SIZE/2 && (Mouse.getX()*10/9) <= squares.get(l).getxPos() + Square.SIZE/2 && (Display.getHeight()-(Mouse.getY()))/.9 <= squares.get(l).getyPos() + Square.SIZE/2 && (Display.getHeight()-(Mouse.getY()))/.9 >= squares.get(l).getyPos() - Square.SIZE/2) {
 				if(!(squares.get(l).isOpen())) {
 					squares.get(l).setOpen(true);
-					squares.get(l).setSpecial(false);
 				}	
 			}
 

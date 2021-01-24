@@ -11,6 +11,18 @@ public class Square {
 	private boolean open;
 	private boolean special;
 	
+	
+	/*
+	 * SQUARE STATES
+	 * 0 : Open Air
+	 * 1 : Basic Wall
+	 * 2 : Safe Air (No enemies)
+	 * 3 : Danger Air (Enemy spawn zone)
+	 * 
+	 * 
+	 * 
+	 */
+	
 	public Square(int xPosArg, int yPosArg, boolean openArg) {
 		
 		xPos = xPosArg;
@@ -42,16 +54,6 @@ public class Square {
 
 	public void setOpen(boolean open) {
 		this.open = open;
-	}
-
-	
-	
-	public boolean isSpecial() {
-		return special;
-	}
-
-	public void setSpecial(boolean special) {
-		this.special = special;
 	}
 
 	public void draw() {
