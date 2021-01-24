@@ -44,7 +44,7 @@ public class program {
 		for(Square s : squares) {
 
 			if(counter%96 == 0 && counter != 0) {
-				saveText = saveText + '\n';
+				saveText = saveText + "\n";
 			}
 
 			if(s.isOpen()) {
