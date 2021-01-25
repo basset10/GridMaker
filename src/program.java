@@ -39,6 +39,11 @@ public class program {
 	static boolean pauseStatus = false;
 	static String saveText = "";
 	static int counter = 0;
+	static boolean gridEnabled = true;
+	static boolean gridStatus = false;
+
+	public static int brushType = 1;
+	
 
 	public static void squaresToText() {
 		for(Square s : squares) {
@@ -47,11 +52,12 @@ public class program {
 				saveText = saveText + "\n";
 			}
 
-			if(s.isOpen()) {
-				saveText = saveText + "0";
-			}else {
-				saveText = saveText + "1";
-			}
+
+			saveText = saveText + s.getBlockType();
+
+
+
+
 
 			counter++;
 
@@ -60,7 +66,7 @@ public class program {
 
 
 	public static void initialize() {
-
+		//Square(int xPosArg, int yPosArg, int blockTypeArg, int wallTypeArg)
 
 		hvlLoad("INOF.hvlft");	        //0
 		hvlFont(0);	
@@ -68,9 +74,9 @@ public class program {
 			for(int i = 0; i < 1920; i=i+Square.SIZE) {
 
 				if(i == 0 || j == 0 || i == 1920 - Square.SIZE || j == 1080 - Square.SIZE) {
-					squares.add(new Square(i+Square.SIZE/2, j+Square.SIZE/2, false));
+					squares.add(new Square(i+Square.SIZE/2, j+Square.SIZE/2, 1, 0));
 				}else {
-					squares.add(new Square(i+Square.SIZE/2, j+Square.SIZE/2, true));
+					squares.add(new Square(i+Square.SIZE/2, j+Square.SIZE/2, 0, -1));
 				}
 
 			}
@@ -80,8 +86,37 @@ public class program {
 
 	public static void update(){
 
-		System.out.println(squares.size());
+		if(Keyboard.isKeyDown(Keyboard.KEY_1)) {	
+			brushType = 1;
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_2)) {	
+			brushType = 2;
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_3)) {	
+			brushType = 3;
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_4)) {	
+			brushType = 4;
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_5)) {	
+			brushType = 5;
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_6)) {	
+			brushType = 6;
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_7)) {	
+			brushType = 7;
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_8)) {	
+			brushType = 8;
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_9)) {	
+			brushType = 9;
+		}
 
+		
+		
+		//Pause key
 		if(!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
 			pauseStatus = false;
 		}
@@ -90,7 +125,19 @@ public class program {
 			Main.screen = Main.SCREEN_SETTINGS;
 			pauseStatus = true;
 		}
+		
+		//Grid key
+		if(!Keyboard.isKeyDown(Keyboard.KEY_G)){
+			gridStatus = false;
+		}
 
+		if(Keyboard.isKeyDown(Keyboard.KEY_G) && !gridStatus){
+			gridStatus = true;
+			gridEnabled = !gridEnabled;
+		}
+		
+		
+		//Save key
 		if(Keyboard.isKeyDown(Keyboard.KEY_S)){
 			squaresToText();
 			try {
@@ -110,29 +157,31 @@ public class program {
 			}
 		}
 
-		if(squares.size() > 0) {
-			for(int i = 0; i < squares.size(); i++) {
-				hvlDraw(hvlLine(new HvlCoord(squares.get(i).getxPos() - (Square.SIZE/2), squares.get(i).getyPos() - (Square.SIZE/2)), new HvlCoord(squares.get(i).getxPos() + (Square.SIZE/2), squares.get(i).getyPos() - (Square.SIZE/2)), 2), Color.orange);
-				hvlDraw(hvlLine(new HvlCoord(squares.get(i).getxPos() - (Square.SIZE/2), squares.get(i).getyPos() - (Square.SIZE/2)), new HvlCoord(squares.get(i).getxPos() - (Square.SIZE/2), squares.get(i).getyPos() + (Square.SIZE/2)), 2), Color.orange);
-				hvlDraw(hvlLine(new HvlCoord(squares.get(i).getxPos() + (Square.SIZE/2), squares.get(i).getyPos() + (Square.SIZE/2)), new HvlCoord(squares.get(i).getxPos() - (Square.SIZE/2), squares.get(i).getyPos() + (Square.SIZE/2)), 2), Color.orange);
-				hvlDraw(hvlLine(new HvlCoord(squares.get(i).getxPos() + (Square.SIZE/2), squares.get(i).getyPos() + (Square.SIZE/2)), new HvlCoord(squares.get(i).getxPos() + (Square.SIZE/2), squares.get(i).getyPos() - (Square.SIZE/2)), 2), Color.orange);
+
+		//Draw Grid
+		if(gridEnabled) {
+			if(squares.size() > 0) {
+				for(int i = 0; i < squares.size(); i++) {
+					hvlDraw(hvlLine(new HvlCoord(squares.get(i).getxPos() - (Square.SIZE/2), squares.get(i).getyPos() - (Square.SIZE/2)), new HvlCoord(squares.get(i).getxPos() + (Square.SIZE/2), squares.get(i).getyPos() - (Square.SIZE/2)), 2), Color.orange);
+					hvlDraw(hvlLine(new HvlCoord(squares.get(i).getxPos() - (Square.SIZE/2), squares.get(i).getyPos() - (Square.SIZE/2)), new HvlCoord(squares.get(i).getxPos() - (Square.SIZE/2), squares.get(i).getyPos() + (Square.SIZE/2)), 2), Color.orange);
+					hvlDraw(hvlLine(new HvlCoord(squares.get(i).getxPos() + (Square.SIZE/2), squares.get(i).getyPos() + (Square.SIZE/2)), new HvlCoord(squares.get(i).getxPos() - (Square.SIZE/2), squares.get(i).getyPos() + (Square.SIZE/2)), 2), Color.orange);
+					hvlDraw(hvlLine(new HvlCoord(squares.get(i).getxPos() + (Square.SIZE/2), squares.get(i).getyPos() + (Square.SIZE/2)), new HvlCoord(squares.get(i).getxPos() + (Square.SIZE/2), squares.get(i).getyPos() - (Square.SIZE/2)), 2), Color.orange);
+				}
 			}
 		}
 
 
 
 		for(int l = 0; l < squares.size(); l++) {
+			//Placing blocks with left click, need to set current block type being painted
 			if(Mouse.isButtonDown(0) && (Mouse.getX()*10/9) >= squares.get(l).getxPos() - Square.SIZE/2 && (Mouse.getX()*10/9) <= squares.get(l).getxPos() + Square.SIZE/2 && (Display.getHeight()-(Mouse.getY()))/.9 <= squares.get(l).getyPos() + Square.SIZE/2 && (Display.getHeight()-(Mouse.getY()))/.9 >= squares.get(l).getyPos() - Square.SIZE/2) {
-				if(squares.get(l).isOpen()) {
-					squares.get(l).setOpen(false);
-					if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-					}
-				}	
+				squares.get(l).setBlockType(brushType);	
 			}
 
+			//Removing blocks with right click
 			if(Mouse.isButtonDown(1) && (Mouse.getX()*10/9) >= squares.get(l).getxPos() - Square.SIZE/2 && (Mouse.getX()*10/9) <= squares.get(l).getxPos() + Square.SIZE/2 && (Display.getHeight()-(Mouse.getY()))/.9 <= squares.get(l).getyPos() + Square.SIZE/2 && (Display.getHeight()-(Mouse.getY()))/.9 >= squares.get(l).getyPos() - Square.SIZE/2) {
-				if(!(squares.get(l).isOpen())) {
-					squares.get(l).setOpen(true);
+				if(!(squares.get(l).getBlockType()== 0)) {
+					squares.get(l).setBlockType(0);
 				}	
 			}
 
