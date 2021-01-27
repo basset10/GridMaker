@@ -2,6 +2,7 @@ import static com.osreboot.ridhvl2.HvlStatics.hvlDraw;
 import static com.osreboot.ridhvl2.HvlStatics.hvlLine;
 import static com.osreboot.ridhvl2.HvlStatics.hvlQuadc;
 
+import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
 
 import com.osreboot.ridhvl2.HvlCoord;
@@ -13,8 +14,6 @@ public class Square {
 	private int yPos = 0;
 	private int blockType;
 	private int wallType;
-
-	private int clock = 0;
 
 
 	/*
@@ -100,8 +99,7 @@ public class Square {
 
 	//Check nearby blocks for every block. 
 	public void checkNearbyWalls() {
-		clock++;
-		if(clock == 5) {
+		if(Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) {
 			//for(Square s : program.squares) {
 				if(blockType == 1) {
 				System.out.println("Checking");
@@ -172,7 +170,6 @@ public class Square {
 					} 
 
 				}
-				clock = 0;
 			//}
 		}
 	}
