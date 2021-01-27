@@ -43,7 +43,7 @@ public class program {
 	static boolean gridStatus = false;
 
 	public static int brushType = 1;
-	
+
 
 	public static void squaresToText() {
 		for(Square s : squares) {
@@ -114,8 +114,8 @@ public class program {
 			brushType = 9;
 		}
 
-		
-		
+
+
 		//Pause key
 		if(!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
 			pauseStatus = false;
@@ -125,7 +125,7 @@ public class program {
 			Main.screen = Main.SCREEN_SETTINGS;
 			pauseStatus = true;
 		}
-		
+
 		//Grid key
 		if(!Keyboard.isKeyDown(Keyboard.KEY_G)){
 			gridStatus = false;
@@ -135,8 +135,8 @@ public class program {
 			gridStatus = true;
 			gridEnabled = !gridEnabled;
 		}
-		
-		
+
+
 		//Save key
 		if(Keyboard.isKeyDown(Keyboard.KEY_S)){
 			squaresToText();
@@ -150,7 +150,7 @@ public class program {
 		}
 
 
-
+		//Draw the squares
 		if(squares.size() > 0) {
 			for(int k = 0; k < squares.size(); k++) {
 				squares.get(k).draw();
@@ -166,6 +166,65 @@ public class program {
 					hvlDraw(hvlLine(new HvlCoord(squares.get(i).getxPos() - (Square.SIZE/2), squares.get(i).getyPos() - (Square.SIZE/2)), new HvlCoord(squares.get(i).getxPos() - (Square.SIZE/2), squares.get(i).getyPos() + (Square.SIZE/2)), 2), Color.orange);
 					hvlDraw(hvlLine(new HvlCoord(squares.get(i).getxPos() + (Square.SIZE/2), squares.get(i).getyPos() + (Square.SIZE/2)), new HvlCoord(squares.get(i).getxPos() - (Square.SIZE/2), squares.get(i).getyPos() + (Square.SIZE/2)), 2), Color.orange);
 					hvlDraw(hvlLine(new HvlCoord(squares.get(i).getxPos() + (Square.SIZE/2), squares.get(i).getyPos() + (Square.SIZE/2)), new HvlCoord(squares.get(i).getxPos() + (Square.SIZE/2), squares.get(i).getyPos() - (Square.SIZE/2)), 2), Color.orange);
+				}
+			}
+		}
+
+		//Draw square walls
+		if(squares.size() > 0) {
+			for(Square s : squares) {
+				s.checkNearbyWalls();
+			}
+			for(Square s : squares) {
+				if(s.getBlockType() == 1) {
+					if(s.getWallType() == 1) {
+						s.drawUpperWall();
+					}else if(s.getWallType() == 2) {
+						s.drawRightWall();
+					}else if(s.getWallType() == 3) {
+						s.drawLowerWall();
+					}else if(s.getWallType() == 4) {
+						s.drawLeftWall();
+					}else if(s.getWallType() == 5) {
+						s.drawUpperWall();
+						s.drawRightWall();
+					}else if(s.getWallType() == 6) {
+						s.drawLowerWall();
+						s.drawRightWall();
+					}else if(s.getWallType() == 7) {
+						s.drawLowerWall();
+						s.drawLeftWall();
+					}else if(s.getWallType() == 8) {
+						s.drawUpperWall();
+						s.drawLeftWall();
+					}else if(s.getWallType() == 9) {
+						s.drawLeftWall();
+						s.drawUpperWall();
+						s.drawRightWall();
+					}else if(s.getWallType() == 10) {
+						s.drawUpperWall();
+						s.drawRightWall();
+						s.drawLowerWall();
+					}else if(s.getWallType() == 11) {
+						s.drawRightWall();
+						s.drawLowerWall();
+						s.drawLeftWall();
+					}else if(s.getWallType() == 12) {
+						s.drawLowerWall();
+						s.drawLeftWall();
+						s.drawUpperWall();
+					}else if(s.getWallType() == 13) {
+						s.drawUpperWall();
+						s.drawLowerWall();
+					}else if(s.getWallType() == 14) {
+						s.drawLeftWall();
+						s.drawRightWall();
+					}else if(s.getWallType() == 15) {
+						s.drawLeftWall();
+						s.drawRightWall();
+						s.drawUpperWall();
+						s.drawLowerWall();
+					}
 				}
 			}
 		}

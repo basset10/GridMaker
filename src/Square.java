@@ -1,7 +1,10 @@
 import static com.osreboot.ridhvl2.HvlStatics.hvlDraw;
+import static com.osreboot.ridhvl2.HvlStatics.hvlLine;
 import static com.osreboot.ridhvl2.HvlStatics.hvlQuadc;
 
 import org.newdawn.slick.Color;
+
+import com.osreboot.ridhvl2.HvlCoord;
 
 public class Square {
 
@@ -10,6 +13,8 @@ public class Square {
 	private int yPos = 0;
 	private int blockType;
 	private int wallType;
+
+	private int clock = 0;
 
 
 	/*
@@ -25,9 +30,8 @@ public class Square {
 	 */
 
 
-	
-	//Walls are placed in the pending state, when a button is pressed they will
-	//automatically determine which wall type they need to be.
+
+	//Walls are placed in the pending state, they will automatically update to match surrounding walls.
 	/*
 	 * WALL TYPES
 	 * 
@@ -52,7 +56,7 @@ public class Square {
 	 */
 
 
-	
+
 	public Square(int xPosArg, int yPosArg, int blockTypeArg, int wallTypeArg) {
 
 		xPos = xPosArg;
@@ -60,7 +64,7 @@ public class Square {
 		blockType = blockTypeArg;
 		wallType = wallTypeArg;
 	}
-	
+
 
 	public int getxPos() {
 		return xPos;
@@ -81,24 +85,115 @@ public class Square {
 	public int getBlockType() {
 		return blockType;
 	}
-	
+
 	public int getWallType() {
 		return wallType;
 	}
-	
+
 	public void setBlockType(int blockTypeArg) {
 		blockType = blockTypeArg;
 	}
-	
+
 	public void setWallType(int wallTypeArg) {
 		wallType = wallTypeArg;
 	}
 
+	//Check nearby blocks for every block. 
+	public void checkNearbyWalls() {
+		clock++;
+		if(clock == 5) {
+			//for(Square s : program.squares) {
+				if(blockType == 1) {
+				System.out.println("Checking");
+				boolean north = false;
+				boolean south = false;
+				boolean east = false;
+				boolean west = false;
+
+				
+
+					//North Block
+					if((getSquareByPosition(this.getxPos(), this.getyPos()-SIZE) != null)){
+						if((getSquareByPosition(this.getxPos(), this.getyPos()-SIZE)).getBlockType() == 1) {
+							north = true;
+						}
+					}
+					//East Block
+					if((getSquareByPosition(this.getxPos()+SIZE, this.getyPos()) != null)){
+						if((getSquareByPosition(this.getxPos()+SIZE, this.getyPos())).getBlockType() == 1) {
+							east = true;
+						}
+					}
+					//South Block
+					if((getSquareByPosition(this.getxPos(), this.getyPos()+SIZE) != null)){
+						if((getSquareByPosition(this.getxPos(), this.getyPos()+SIZE)).getBlockType() == 1) {
+							south = true;
+						}
+					}
+					//West Block
+					if((getSquareByPosition(this.getxPos()-SIZE, this.getyPos())!= null)){
+						if((getSquareByPosition(this.getxPos()-SIZE, this.getyPos())).getBlockType() == 1) {
+							west = true;
+						}
+					}
+
+					if(north && !east && !south && !west) {
+						this.setWallType(11);
+					}else if(!north && east && !south && !west) {
+						this.setWallType(12);
+					}else if(!north && !east && south && !west) {
+						this.setWallType(9);
+					}else if(!north && !east && !south && west) {
+						this.setWallType(10);
+					}else if(!north && !east && !south && !west) {
+						this.setWallType(15);
+					}else if(north && east && south && west) {
+						this.setWallType(0);
+					}else if(north && east && !south && !west) {
+						this.setWallType(7);
+					}else if(north && !east && south && !west) {
+						this.setWallType(14);
+					}else if(north && !east && !south && west) {
+						this.setWallType(6);
+					}else if(!north && east && south && !west) {
+						this.setWallType(8);
+					}else if(!north && east && !south && west) {
+						this.setWallType(13);
+					}else if(north && east && south && !west) {
+						this.setWallType(4);
+					}else if(!north && east && south && west) {
+						this.setWallType(1);
+					}else if(north && !east && south && west) {
+						this.setWallType(2);
+					}else if(north && east && !south && west) {
+						this.setWallType(3);
+					}else if(!north && !east && south && west) {
+						this.setWallType(5);
+					} 
+
+				}
+				clock = 0;
+			//}
+		}
+	}
+
+	public Square getSquareByPosition(int xArg, int yArg) {
+		for(Square s : program.squares) {
+			if(s.getxPos() == xArg && s.getyPos() == yArg) {
+				return s;
+			}	
+		}
+		return null;
+	}
+
 
 	public void draw() {
+
+
 		//Brush types
 		if(blockType == 0) {		
 			hvlDraw(hvlQuadc(xPos, yPos, SIZE, SIZE), Color.gray);
+
 		}else if(blockType == 1){
 			hvlDraw(hvlQuadc(xPos, yPos, SIZE, SIZE), Color.darkGray);
 		}
@@ -122,6 +217,21 @@ public class Square {
 		}
 	}
 
+	public void drawUpperWall() {
+		hvlDraw(hvlLine(new HvlCoord(xPos-SIZE/2, yPos-SIZE/2), new HvlCoord(xPos+SIZE/2, yPos-SIZE/2), 4), Color.black);
+	}
+
+	public void drawRightWall() {
+		hvlDraw(hvlLine(new HvlCoord(xPos+SIZE/2, yPos-SIZE/2), new HvlCoord(xPos+SIZE/2, yPos+SIZE/2), 4), Color.black);
+	}
+
+	public void drawLeftWall() {
+		hvlDraw(hvlLine(new HvlCoord(xPos-SIZE/2, yPos-SIZE/2), new HvlCoord(xPos-SIZE/2, yPos+SIZE/2), 4), Color.black);
+	}
+
+	public void drawLowerWall() {
+		hvlDraw(hvlLine(new HvlCoord(xPos-SIZE/2, yPos+SIZE/2), new HvlCoord(xPos+SIZE/2, yPos+SIZE/2), 4), Color.black);
+	}
 
 
 }
